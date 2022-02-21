@@ -52,6 +52,10 @@ open class HtmlRenderer(
         return sorted
     }
 
+    fun test(unused:Int) {
+
+    }
+
     override fun FlowContent.wrapGroup(
         node: ContentGroup,
         pageContext: ContentPage,
@@ -291,14 +295,14 @@ open class HtmlRenderer(
                             }.stripDiv()
                         })
                 val contentOfSourceSet = mutableListOf<ContentNode>()
-                distinct.onEachIndexed{ i, (_, distinctInstances) ->
+                distinct.onEachIndexed { i, (_, distinctInstances) ->
                     contentOfSourceSet.addIfNotNull(distinctInstances.firstOrNull()?.before)
                     contentOfSourceSet.addAll(distinctInstances.map { it.divergent })
                     contentOfSourceSet.addIfNotNull(
                         distinctInstances.firstOrNull()?.after
                             ?: if (i != distinct.size - 1) ContentBreakLine(it.key) else null
                     )
-                    if(node.dci.kind == ContentKind.Main && i != distinct.size - 1)
+                    if (node.dci.kind == ContentKind.Main && i != distinct.size - 1)
                         contentOfSourceSet.add(ContentBreakLine(it.key))
                 }
                 contentOfSourceSet
@@ -950,4 +954,4 @@ private val ContentNode.sourceSetsFilters: String
     get() = sourceSets.sourceSetIDs.joinToString(" ") { it.toString() }
 
 private val DisplaySourceSet.comparableKey
-        get() = sourceSetIDs.merged.let { it.scopeId + it.sourceSetName }
+    get() = sourceSetIDs.merged.let { it.scopeId + it.sourceSetName }

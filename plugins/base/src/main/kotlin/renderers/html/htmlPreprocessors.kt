@@ -1,14 +1,14 @@
 package org.jetbrains.dokka.base.renderers.html
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.base.renderers.sourceSets
-import org.jetbrains.dokka.base.templating.AddToSearch
 import org.jetbrains.dokka.base.templating.AddToSourcesetDependencies
 import org.jetbrains.dokka.base.templating.toJsonString
-import org.jetbrains.dokka.links.DRI
-import org.jetbrains.dokka.model.*
+import org.jetbrains.dokka.model.DEnum
+import org.jetbrains.dokka.model.DEnumEntry
+import org.jetbrains.dokka.model.DFunction
+import org.jetbrains.dokka.model.withDescendants
 import org.jetbrains.dokka.pages.*
 import org.jetbrains.dokka.plugability.DokkaContext
 import org.jetbrains.dokka.plugability.configuration
@@ -76,7 +76,7 @@ class CustomResourceInstaller(val dokkaContext: DokkaContext) : PageTransformer 
         val customResourcesPaths = (customAssets + customStylesheets).map { it.name }.toSet()
         val withEmbeddedResources =
             input.transformContentPagesTree { it.modified(embeddedResources = it.embeddedResources + customResourcesPaths) }
-        if(dokkaContext.configuration.delayTemplateSubstitution)
+        if (dokkaContext.configuration.delayTemplateSubstitution)
             return withEmbeddedResources
         val (currentResources, otherPages) = withEmbeddedResources.children.partition { it is RendererSpecificResourcePage }
         return input.modified(children = otherPages + currentResources.filterNot { it.name in customResourcesPaths } + customAssets + customStylesheets)
